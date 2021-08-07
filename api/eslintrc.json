@@ -68,12 +68,7 @@
 			"warn",
 			{
 				"newlinesBetween": "always",
-				"groups": [
-					"module",
-					"/^@server/shared/",
-					"/^@/",
-					["parent", "sibling", "index"]
-				],
+				"groups": ["module", "/^@server/shared/", "/^@/", ["parent", "sibling", "index"]],
 				"alphabetize": {
 					"order": "asc",
 					"ignoreCase": true
