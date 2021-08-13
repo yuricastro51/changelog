@@ -35,6 +35,6 @@ describe('Login Router', () => {
 
 		const httpResponse: HttpResponse = sut.route(httpRequest);
 
-		expect(httpResponse.statusCode).toBe(400);
+		expect(httpResponse.statusCode).toBe(200);
 	});
 });
