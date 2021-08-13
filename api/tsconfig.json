@@ -8,7 +8,7 @@
 		"rootDir": "./src",
 		"removeComments": true,
 		"strict": true,
-		"typeRoots": ["./node_modules/@types", "./src/@types"],
+		"typeRoots": ["./node_modules/@types", "./src/@types", "jest"],
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,

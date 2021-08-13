@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express-serve-static-core';
 import { ReleaseNote } from './entity/ReleaseNote';
@@ -8,6 +9,7 @@ import { getMyConnection } from './services/db';
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.post('/release', async (req: Request, res: Response) => {
