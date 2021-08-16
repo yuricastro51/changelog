@@ -2,9 +2,13 @@ import { HttpRequestType, HttpResponseType } from 'src/utils/types';
 import MissingParamError from '../helpers/missingParamError';
 import LoginRouter from './loginRouter';
 
+const makeSut = () => {
+	return new LoginRouter();
+};
+
 describe('Login Router', () => {
 	test('Should return 400 if no email is provided', () => {
-		const sut = new LoginRouter();
+		const sut = makeSut();
 		const httpRequest = {
 			body: {
 				password: 'any_password',
@@ -19,7 +23,7 @@ describe('Login Router', () => {
 	});
 
 	test('Should return 400 if no password is provided', () => {
-		const sut = new LoginRouter();
+		const sut = makeSut();
 		const httpRequest = {
 			body: {
 				password: '',
@@ -34,7 +38,7 @@ describe('Login Router', () => {
 	});
 
 	test('Should return 500 if httpRequest has no body', () => {
-		const sut = new LoginRouter();
+		const sut = makeSut();
 		const httpRequest = {
 			body: {
 				password: '',
