@@ -1,31 +1,51 @@
-type Login = {
+type LoginType = {
 	email: string;
 	password: string;
 };
 
-type HttpRequest = {
-	body: Login;
+type HttpRequestType = {
+	body: LoginType;
 };
 
-type HttpResponse = {
+type HttpResponseType = {
 	statusCode: number;
+	body: any;
 };
+
+class HttpResponse {
+	static badRequest(paramName: string): HttpResponseType {
+		return { statusCode: 400, body: new MissingParamError(paramName) };
+	}
+
+	static serverError(paramName: string): HttpResponseType {
+		return { statusCode: 500, body: new MissingParamError(paramName) };
+	}
+}
 
 class LoginRouter {
-	route(httpRequest: HttpRequest) {
+	route(httpRequest: HttpRequestType) {
 		if (!httpRequest.body || !httpRequest) {
-			return { statusCode: 500 };
+			return HttpResponse.serverError('httpRequest');
 		}
 
 		const { email, password } = httpRequest.body;
 
-		if (!email || !password) {
-			return {
-				statusCode: 400,
-			};
+		if (!email) {
+			return HttpResponse.badRequest('email');
 		}
 
-		return { statusCode: 200 };
+		if (!password) {
+			return HttpResponse.badRequest('password');
+		}
+
+		return { statusCode: 200, body: 'ok' };
+	}
+}
+
+class MissingParamError extends Error {
+	constructor(paramName: string) {
+		super(`Missing param: ${paramName}`);
+		this.name = 'MissingParamError';
 	}
 }
 
@@ -39,9 +59,10 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse: HttpResponse = sut.route(httpRequest);
+		const httpResponse: HttpResponseType = sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
+		expect(httpResponse.body).toEqual(new MissingParamError('email'));
 	});
 
 	test('Should return 400 if no password is provided', () => {
@@ -53,9 +74,10 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse: HttpResponse = sut.route(httpRequest);
+		const httpResponse: HttpResponseType = sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
+		expect(httpResponse.body).toEqual(new MissingParamError('password'));
 	});
 
 	test('Should return 500 if httpRequest has no body', () => {
@@ -67,7 +89,7 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse: HttpResponse = sut.route({} as HttpRequest);
+		const httpResponse: HttpResponseType = sut.route({} as HttpRequestType);
 
 		expect(httpResponse.statusCode).toBe(500);
 	});
