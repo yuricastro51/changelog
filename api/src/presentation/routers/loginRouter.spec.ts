@@ -1,53 +1,6 @@
-type LoginType = {
-	email: string;
-	password: string;
-};
-
-type HttpRequestType = {
-	body: LoginType;
-};
-
-type HttpResponseType = {
-	statusCode: number;
-	body: any;
-};
-
-class HttpResponse {
-	static badRequest(paramName: string): HttpResponseType {
-		return { statusCode: 400, body: new MissingParamError(paramName) };
-	}
-
-	static serverError(paramName: string): HttpResponseType {
-		return { statusCode: 500, body: new MissingParamError(paramName) };
-	}
-}
-
-class LoginRouter {
-	route(httpRequest: HttpRequestType) {
-		if (!httpRequest.body || !httpRequest) {
-			return HttpResponse.serverError('httpRequest');
-		}
-
-		const { email, password } = httpRequest.body;
-
-		if (!email) {
-			return HttpResponse.badRequest('email');
-		}
-
-		if (!password) {
-			return HttpResponse.badRequest('password');
-		}
-
-		return { statusCode: 200, body: 'ok' };
-	}
-}
-
-class MissingParamError extends Error {
-	constructor(paramName: string) {
-		super(`Missing param: ${paramName}`);
-		this.name = 'MissingParamError';
-	}
-}
+import { HttpRequestType, HttpResponseType } from 'src/utils/types';
+import MissingParamError from '../helpers/missingParamError';
+import LoginRouter from './loginRouter';
 
 describe('Login Router', () => {
 	test('Should return 400 if no email is provided', () => {
