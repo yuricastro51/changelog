@@ -3,6 +3,6 @@ module.exports = {
 	testMatch: ['<rootDir>/src/**/*.spec.ts'],
 	testEnvironment: 'node',
 	clearMocks: true,
-	collectCoverageFrom: ['**/src/**/*.ta', '!**/src/main/**'],
+	collectCoverageFrom: ['**/src/**/*.ts', '!**/src/main/**'],
 	preset: 'ts-jest',
 };

@@ -7,23 +7,8 @@
 		"build": "babel src --extensions \"*.js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
 		"start": "ts-node src/index.ts",
 		"dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
-		"pretest": "eslint --ignore-path .gitignore . --fix",
 		"test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
-		"test:staged": "yarn test -- --findRelatedTests --silent",
 		"test:ci": "yarn test --coverage --silent"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged",
-			"pre-push": "yarn test:ci"
-		}
-	},
-	"lint-staged": {
-		"*.ts": [
-			"./node_modules/.bin/eslint — fix",
-			"yarn test:staged",
-			"git add"
-		]
 	},
 	"repository": {
 		"type": "git",
@@ -63,9 +48,7 @@
 		"eslint": "^7.19.0",
 		"eslint-config-airbnb-base": "^14.2.1",
 		"eslint-plugin-import": "2.22.1",
-		"husky": "^7.0.1",
 		"jest": "^27.0.6",
-		"lint-staged": "^11.1.2",
 		"ts-jest": "^27.0.4",
 		"ts-node": "3.3.0",
 		"ts-node-dev": "^1.1.1",
