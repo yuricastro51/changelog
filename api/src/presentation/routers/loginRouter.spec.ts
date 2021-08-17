@@ -57,6 +57,7 @@ describe('Login Router', () => {
 		const httpResponse: HttpResponseType = sut.route({} as HttpRequestType);
 
 		expect(httpResponse.statusCode).toBe(500);
+		expect(httpResponse.body).toEqual(new MissingParamError('httpRequest'));
 	});
 
 	test('Should call AuthUseCase with correct params', () => {
