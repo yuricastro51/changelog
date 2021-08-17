@@ -23,6 +23,6 @@ export default class LoginRouter {
 		}
 
 		this.authUseCase.auth(email, password);
-		return { statusCode: 401, body: 'ok' };
+		return HttpResponse.unauthorizedError();
 	}
 }

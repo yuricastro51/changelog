@@ -1,5 +1,6 @@
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
 import MissingParamError from '../helpers/missingParamError';
+import UnauthorizedError from '../helpers/unauthorizedError';
 import LoginRouter from './loginRouter';
 
 const makeSut = () => {
@@ -84,5 +85,6 @@ describe('Login Router', () => {
 		const httpResponse = sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(401);
+		expect(httpResponse.body).toEqual(new UnauthorizedError());
 	});
 });
