@@ -13,10 +13,10 @@ const makeSut = () => {
 		};
 	}
 
-	const authUseCase = new AuthUseCaseSpy();
-	const sut = new LoginRouter(authUseCase);
+	const authUseCaseSpy = new AuthUseCaseSpy();
+	const sut = new LoginRouter(authUseCaseSpy);
 
-	return { authUseCase, sut };
+	return { authUseCaseSpy, sut };
 };
 
 describe('Login Router', () => {
@@ -59,7 +59,7 @@ describe('Login Router', () => {
 	});
 
 	test('Should call AuthUseCase with correct params', () => {
-		const { sut, authUseCase } = makeSut();
+		const { sut, authUseCaseSpy } = makeSut();
 		const httpRequest = {
 			body: {
 				password: 'any_password',
@@ -68,7 +68,21 @@ describe('Login Router', () => {
 		};
 
 		sut.route(httpRequest);
-		expect(authUseCase.email).toBe(httpRequest.body.email);
-		expect(authUseCase.password).toBe(httpRequest.body.password);
+		expect(authUseCaseSpy.email).toBe(httpRequest.body.email);
+		expect(authUseCaseSpy.password).toBe(httpRequest.body.password);
+	});
+
+	test('Should returns 401 when invalid credentials are provided', () => {
+		const { sut } = makeSut();
+		const httpRequest = {
+			body: {
+				password: 'invalid_password',
+				email: 'invalid_email@mail.com',
+			},
+		};
+
+		const httpResponse = sut.route(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(401);
 	});
 });
