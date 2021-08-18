@@ -1,10 +1,11 @@
+import { AuthUseCase } from 'src/domain/interfaces/authUseCase';
 import { HttpRequestType } from 'src/utils/types';
 import HttpResponse from '../helpers/httpResponse';
 
 export default class LoginRouter {
-	authUseCase: any;
+	authUseCase: AuthUseCase;
 
-	constructor(authUseCase: any) {
+	constructor(authUseCase: AuthUseCase) {
 		this.authUseCase = authUseCase;
 	}
 	route(httpRequest: HttpRequestType) {
@@ -28,6 +29,6 @@ export default class LoginRouter {
 			return HttpResponse.unauthorizedError();
 		}
 
-		return HttpResponse.ok();
+		return HttpResponse.ok({ accessToken });
 	}
 }

@@ -1,10 +1,12 @@
+import { AuthUseCase } from 'src/domain/interfaces/authUseCase';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
+import HttpResponse from '../helpers/httpResponse';
 import MissingParamError from '../helpers/missingParamError';
 import UnauthorizedError from '../helpers/unauthorizedError';
 import LoginRouter from './loginRouter';
 
 const makeSut = () => {
-	class AuthUseCaseSpy {
+	class AuthUseCaseSpy implements AuthUseCase {
 		email?: string;
 		password?: string;
 		accessToken?: string;
@@ -94,7 +96,7 @@ describe('Login Router', () => {
 	});
 
 	test('Should returns 200 when valid credentials are provided', () => {
-		const { sut } = makeSut();
+		const { sut, authUseCaseSpy } = makeSut();
 
 		const httpRequest = {
 			body: {
@@ -106,6 +108,6 @@ describe('Login Router', () => {
 		const httpResponse = sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(200);
-		expect(httpResponse.body).toEqual('ok');
+		expect(httpResponse.body.accessToken).toEqual(authUseCaseSpy.accessToken);
 	});
 });
