@@ -1,11 +1,10 @@
 import { HttpResponseType } from 'src/utils/types';
-import MissingParamError from './missingParamError';
 import ServerError from './serverError';
 import UnauthorizedError from './unauthorizedError';
 
 export default class HttpResponse {
-	static badRequest(paramName: string): HttpResponseType {
-		return { statusCode: 400, body: new MissingParamError(paramName) };
+	static badRequest(error: Error): HttpResponseType {
+		return { statusCode: 400, body: error };
 	}
 
 	static serverError(): HttpResponseType {

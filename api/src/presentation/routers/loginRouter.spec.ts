@@ -1,5 +1,6 @@
 import { AuthUseCase } from 'src/domain/interfaces/authUseCase';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
+import InvalidParamError from '../helpers/invalidParamError';
 import MissingParamError from '../helpers/missingParamError';
 import ServerError from '../helpers/serverError';
 import UnauthorizedError from '../helpers/unauthorizedError';
