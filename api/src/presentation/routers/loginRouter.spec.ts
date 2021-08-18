@@ -11,7 +11,7 @@ const makeSut = () => {
 		password?: string;
 		accessToken?: string;
 
-		auth = (email: string, password: string) => {
+		auth = async (email: string, password: string) => {
 			this.email = email;
 			this.password = password;
 			return this.accessToken;
@@ -27,9 +27,9 @@ const makeSut = () => {
 
 const makeAuthUseCaseWithError = () => {
 	class AuthUseCaseSpy implements AuthUseCase {
-		auth(email: string, password: string): string | undefined {
+		auth = async (email: string, password: string) => {
 			throw new Error('Method not implemented.');
-		}
+		};
 	}
 
 	const authUseCaseSpy = new AuthUseCaseSpy();
@@ -39,7 +39,7 @@ const makeAuthUseCaseWithError = () => {
 };
 
 describe('Login Router', () => {
-	test('Should return 400 if no email is provided', () => {
+	test('Should return 400 if no email is provided', async () => {
 		const { sut } = makeSut();
 		const httpRequest = {
 			body: {
@@ -48,13 +48,13 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse: HttpResponseType = sut.route(httpRequest);
+		const httpResponse: HttpResponseType = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError('email'));
 	});
 
-	test('Should return 400 if no password is provided', () => {
+	test('Should return 400 if no password is provided', async () => {
 		const { sut } = makeSut();
 		const httpRequest = {
 			body: {
@@ -63,22 +63,22 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse: HttpResponseType = sut.route(httpRequest);
+		const httpResponse: HttpResponseType = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError('password'));
 	});
 
-	test('Should return 500 if httpRequest has no body', () => {
+	test('Should return 500 if httpRequest has no body', async () => {
 		const { sut } = makeSut();
 
-		const httpResponse: HttpResponseType = sut.route({} as HttpRequestType);
+		const httpResponse: HttpResponseType = await sut.route({} as HttpRequestType);
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
 	});
 
-	test('Should call AuthUseCase with correct params', () => {
+	test('Should call AuthUseCase with correct params', async () => {
 		const { sut, authUseCaseSpy } = makeSut();
 		const httpRequest = {
 			body: {
@@ -87,12 +87,12 @@ describe('Login Router', () => {
 			},
 		};
 
-		sut.route(httpRequest);
+		await sut.route(httpRequest);
 		expect(authUseCaseSpy.email).toBe(httpRequest.body.email);
 		expect(authUseCaseSpy.password).toBe(httpRequest.body.password);
 	});
 
-	test('Should returns 401 when invalid credentials are provided', () => {
+	test('Should returns 401 when invalid credentials are provided', async () => {
 		const { sut, authUseCaseSpy } = makeSut();
 		authUseCaseSpy.accessToken = undefined;
 		const httpRequest = {
@@ -102,13 +102,13 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse = sut.route(httpRequest);
+		const httpResponse = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(401);
 		expect(httpResponse.body).toEqual(new UnauthorizedError());
 	});
 
-	test('Should returns 200 when valid credentials are provided', () => {
+	test('Should returns 200 when valid credentials are provided', async () => {
 		const { sut, authUseCaseSpy } = makeSut();
 
 		const httpRequest = {
@@ -118,13 +118,13 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse = sut.route(httpRequest);
+		const httpResponse = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(200);
 		expect(httpResponse.body.accessToken).toEqual(authUseCaseSpy.accessToken);
 	});
 
-	test('Should returns 500 if authUseCase throws', () => {
+	test('Should returns 500 if authUseCase throws', async () => {
 		const { sut, authUseCaseSpy } = makeAuthUseCaseWithError();
 
 		const httpRequest = {
@@ -134,7 +134,7 @@ describe('Login Router', () => {
 			},
 		};
 
-		const httpResponse = sut.route(httpRequest);
+		const httpResponse = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());

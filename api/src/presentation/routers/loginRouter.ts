@@ -8,7 +8,7 @@ export default class LoginRouter {
 	constructor(authUseCase: AuthUseCase) {
 		this.authUseCase = authUseCase;
 	}
-	route(httpRequest: HttpRequestType) {
+	async route(httpRequest: HttpRequestType) {
 		try {
 			const { email, password } = httpRequest.body;
 
@@ -20,7 +20,7 @@ export default class LoginRouter {
 				return HttpResponse.badRequest('password');
 			}
 
-			const accessToken = this.authUseCase.auth(email, password);
+			const accessToken = await this.authUseCase.auth(email, password);
 
 			if (!accessToken) {
 				return HttpResponse.unauthorizedError();
