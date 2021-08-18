@@ -9,26 +9,26 @@ export default class LoginRouter {
 		this.authUseCase = authUseCase;
 	}
 	route(httpRequest: HttpRequestType) {
-		if (!httpRequest.body || !httpRequest) {
-			return HttpResponse.serverError('httpRequest');
+		try {
+			const { email, password } = httpRequest.body;
+
+			if (!email) {
+				return HttpResponse.badRequest('email');
+			}
+
+			if (!password) {
+				return HttpResponse.badRequest('password');
+			}
+
+			const accessToken = this.authUseCase.auth(email, password);
+
+			if (!accessToken) {
+				return HttpResponse.unauthorizedError();
+			}
+
+			return HttpResponse.ok({ accessToken });
+		} catch (error) {
+			return HttpResponse.serverError();
 		}
-
-		const { email, password } = httpRequest.body;
-
-		if (!email) {
-			return HttpResponse.badRequest('email');
-		}
-
-		if (!password) {
-			return HttpResponse.badRequest('password');
-		}
-
-		const accessToken = this.authUseCase.auth(email, password);
-
-		if (!accessToken) {
-			return HttpResponse.unauthorizedError();
-		}
-
-		return HttpResponse.ok({ accessToken });
 	}
 }

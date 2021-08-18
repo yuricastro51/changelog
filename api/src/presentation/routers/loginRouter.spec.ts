@@ -1,7 +1,7 @@
 import { AuthUseCase } from 'src/domain/interfaces/authUseCase';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
-import HttpResponse from '../helpers/httpResponse';
 import MissingParamError from '../helpers/missingParamError';
+import ServerError from '../helpers/serverError';
 import UnauthorizedError from '../helpers/unauthorizedError';
 import LoginRouter from './loginRouter';
 
@@ -23,6 +23,19 @@ const makeSut = () => {
 	const sut = new LoginRouter(authUseCaseSpy);
 
 	return { authUseCaseSpy, sut };
+};
+
+const makeAuthUseCaseWithError = () => {
+	class AuthUseCaseSpy implements AuthUseCase {
+		auth(email: string, password: string): string | undefined {
+			throw new Error('Method not implemented.');
+		}
+	}
+
+	const authUseCaseSpy = new AuthUseCaseSpy();
+	const sut = new LoginRouter(authUseCaseSpy);
+
+	return { sut, authUseCaseSpy };
 };
 
 describe('Login Router', () => {
@@ -62,7 +75,7 @@ describe('Login Router', () => {
 		const httpResponse: HttpResponseType = sut.route({} as HttpRequestType);
 
 		expect(httpResponse.statusCode).toBe(500);
-		expect(httpResponse.body).toEqual(new MissingParamError('httpRequest'));
+		expect(httpResponse.body).toEqual(new ServerError());
 	});
 
 	test('Should call AuthUseCase with correct params', () => {
@@ -109,5 +122,21 @@ describe('Login Router', () => {
 
 		expect(httpResponse.statusCode).toBe(200);
 		expect(httpResponse.body.accessToken).toEqual(authUseCaseSpy.accessToken);
+	});
+
+	test('Should returns 500 if authUseCase throws', () => {
+		const { sut, authUseCaseSpy } = makeAuthUseCaseWithError();
+
+		const httpRequest = {
+			body: {
+				password: 'valid_password',
+				email: 'valid_email@mail.com',
+			},
+		};
+
+		const httpResponse = sut.route(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(500);
+		expect(httpResponse.body).toEqual(new ServerError());
 	});
 });

@@ -1,5 +1,6 @@
 import { HttpResponseType } from 'src/utils/types';
 import MissingParamError from './missingParamError';
+import ServerError from './serverError';
 import UnauthorizedError from './unauthorizedError';
 
 export default class HttpResponse {
@@ -7,8 +8,8 @@ export default class HttpResponse {
 		return { statusCode: 400, body: new MissingParamError(paramName) };
 	}
 
-	static serverError(paramName: string): HttpResponseType {
-		return { statusCode: 500, body: new MissingParamError(paramName) };
+	static serverError(): HttpResponseType {
+		return { statusCode: 500, body: new ServerError() };
 	}
 
 	static unauthorizedError(): HttpResponseType {
