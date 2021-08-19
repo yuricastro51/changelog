@@ -49,6 +49,17 @@ const makeEmailValidator = () => {
 	return emailValidatorSpy;
 };
 
+const makeEmailValidatorWithError = () => {
+	class EmailValidatorSpy implements EmailValidator {
+		isValid(email: string): boolean {
+			throw new Error('Method not implemented.');
+		}
+	}
+
+	const emailValidatorSpy = new EmailValidatorSpy();
+	return emailValidatorSpy;
+};
+
 const makeAuthUseCaseWithError = () => {
 	class AuthUseCaseSpy implements AuthUseCase {
 		auth = async (email: string, password: string) => {
@@ -56,19 +67,7 @@ const makeAuthUseCaseWithError = () => {
 		};
 	}
 
-	const authUseCaseSpy = new AuthUseCaseSpy();
-
-	class EmailValidatorSpy implements EmailValidator {
-		isValid(email: string): boolean {
-			return true;
-		}
-	}
-
-	const emailValidatorSpy = new EmailValidatorSpy();
-
-	const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy);
-
-	return { sut, authUseCaseSpy };
+	return new AuthUseCaseSpy();
 };
 
 describe('Login Router', () => {
@@ -158,7 +157,9 @@ describe('Login Router', () => {
 	});
 
 	test('Should returns 500 if authUseCase throws', async () => {
-		const { sut, authUseCaseSpy } = makeAuthUseCaseWithError();
+		const authUseCaseSpy = makeAuthUseCaseWithError();
+		const emailValidatorSpy = makeEmailValidator();
+		const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy);
 
 		const httpRequest = {
 			body: {
@@ -202,6 +203,25 @@ describe('Login Router', () => {
 		};
 
 		const httpResponse: HttpResponseType = await sut.route(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(500);
+		expect(httpResponse.body).toEqual(new ServerError());
+	});
+
+	test('Should returns 500 if emailValidator throws', async () => {
+		const authUseCaseSpy = makeAuthUseCase();
+		const emailValidatorSpy = makeEmailValidatorWithError();
+
+		const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy);
+
+		const httpRequest = {
+			body: {
+				password: 'valid_password',
+				email: 'valid_email@mail.com',
+			},
+		};
+
+		const httpResponse = await sut.route(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
