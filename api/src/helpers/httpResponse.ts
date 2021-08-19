@@ -1,6 +1,6 @@
 import { HttpResponseType } from 'src/utils/types';
-import ServerError from './serverError';
-import UnauthorizedError from './unauthorizedError';
+import ServerError from './errors/serverError';
+import UnauthorizedError from './errors/unauthorizedError';
 
 export default class HttpResponse {
 	static badRequest(error: Error): HttpResponseType {

@@ -1,10 +1,10 @@
 import { AuthUseCase } from 'src/interfaces/authUseCase';
 import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
-import InvalidParamError from '../helpers/invalidParamError';
-import MissingParamError from '../helpers/missingParamError';
-import ServerError from '../helpers/serverError';
-import UnauthorizedError from '../helpers/unauthorizedError';
+import InvalidParamError from '../helpers/errors/invalidParamError';
+import MissingParamError from '../helpers/errors/missingParamError';
+import ServerError from '../helpers/errors/serverError';
+import UnauthorizedError from '../helpers/errors/unauthorizedError';
 import LoginRouter from './loginRouter';
 
 const makeSut = () => {
