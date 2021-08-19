@@ -1,5 +1,5 @@
-import { AuthUseCase } from 'src/domain/interfaces/authUseCase';
-import { EmailValidator } from 'src/domain/interfaces/emailValidator';
+import { AuthUseCase } from 'src/interfaces/authUseCase';
+import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType } from 'src/utils/types';
 import HttpResponse from '../helpers/httpResponse';
 import InvalidParamError from '../helpers/invalidParamError';
