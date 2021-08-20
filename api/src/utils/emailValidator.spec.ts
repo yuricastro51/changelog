@@ -1,3 +1,15 @@
+class ValidatorTest {
+	isEmailValid = true;
+	email!: string;
+
+	isEmail(email: string) {
+		this.email = email;
+		return this.isEmailValid;
+	}
+}
+
+jest.mock('validator', () => new ValidatorTest());
+
 import validator from 'validator';
 import { EmailValidator } from './emailValidator';
 
