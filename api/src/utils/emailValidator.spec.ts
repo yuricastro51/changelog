@@ -1,6 +1,6 @@
 class ValidatorTest {
 	isEmailValid = true;
-	email!: string;
+	email = '';
 
 	isEmail(email: string) {
 		this.email = email;
