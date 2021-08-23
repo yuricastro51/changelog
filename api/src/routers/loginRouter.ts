@@ -1,4 +1,4 @@
-import { AuthUseCase } from 'src/interfaces/authUseCase';
+import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType } from 'src/utils/types';
 import HttpResponse from '../helpers/httpResponse';
@@ -6,10 +6,10 @@ import InvalidParamError from '../helpers/errors/invalidParamError';
 import MissingParamError from '../helpers/errors/missingParamError';
 
 export default class LoginRouter {
-	authUseCase: AuthUseCase;
+	authUseCase: IAuthUseCase;
 	emailValidator: EmailValidator;
 
-	constructor(authUseCase: AuthUseCase, emailValidator: EmailValidator) {
+	constructor(authUseCase: IAuthUseCase, emailValidator: EmailValidator) {
 		this.authUseCase = authUseCase;
 		this.emailValidator = emailValidator;
 	}

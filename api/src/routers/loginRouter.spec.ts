@@ -1,4 +1,4 @@
-import { AuthUseCase } from 'src/interfaces/authUseCase';
+import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
 import InvalidParamError from '../helpers/errors/invalidParamError';
@@ -19,7 +19,7 @@ const makeSut = () => {
 };
 
 const makeAuthUseCase = () => {
-	class AuthUseCaseSpy implements AuthUseCase {
+	class AuthUseCaseSpy implements IAuthUseCase {
 		email?: string;
 		password?: string;
 		accessToken?: string;
@@ -63,7 +63,7 @@ const makeEmailValidatorWithError = () => {
 };
 
 const makeAuthUseCaseWithError = () => {
-	class AuthUseCaseSpy implements AuthUseCase {
+	class AuthUseCaseSpy implements IAuthUseCase {
 		auth = async (email: string, password: string) => {
 			throw new Error('Method not implemented.');
 		};
