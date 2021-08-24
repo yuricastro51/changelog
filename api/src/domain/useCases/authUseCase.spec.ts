@@ -6,6 +6,8 @@ class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 	email!: string;
 	load(email: string) {
 		this.email = email;
+
+		return null;
 	}
 }
 
@@ -23,15 +25,16 @@ class AuthUseCase implements AuthUseCase {
 			throw new InvalidParamError('loadUserByEmailRepository');
 		}
 
-		await this.loadUserByEmailRepository.load(email);
+		const user = await this.loadUserByEmailRepository.load(email);
 
-		return 'valid_token';
+		if (!user) {
+			return null;
+		}
 	}
 }
 
 const makeSut = () => {
 	const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy();
-
 	const sut = new AuthUseCase(loadUserByEmailRepositorySpy);
 
 	return { sut, loadUserByEmailRepositorySpy };
@@ -54,24 +57,22 @@ describe('Auth UseCase', () => {
 
 	test('Should call LoadUserByEmailRepository with correct email', async () => {
 		const { sut, loadUserByEmailRepositorySpy } = makeSut();
-
 		await sut.auth('any_email@mail.com', 'any_password');
 
 		expect(loadUserByEmailRepositorySpy.email).toBe('any_email@mail.com');
 	});
 
-	test('Should throw if no LoadUserByEmailRepository is provided', async () => {
+	test('Should throw if invalid LoadUserByEmailRepository is provided', async () => {
 		const sut = new AuthUseCase({} as ILoadUserByEmailRepository);
-
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
 		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));
 	});
 
-	test('Should return a token if valid params are provided', async () => {
+	test('Should return null if LoadUserByEmailRepository.load() returns null', async () => {
 		const { sut } = makeSut();
-		const token = await sut.auth('valid_email@mail.com', 'valid_password');
+		const accessToken = await sut.auth('invalid_email@mail.com', 'any_password');
 
-		expect(token).toBe('valid_token');
+		expect(accessToken).toBeNull();
 	});
 });
