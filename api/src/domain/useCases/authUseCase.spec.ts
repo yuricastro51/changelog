@@ -1,3 +1,4 @@
+import InvalidParamError from '../../helpers/errors/invalidParamError';
 import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
 import MissingParamError from '../../helpers/errors/missingParamError';
 
@@ -16,6 +17,10 @@ class AuthUseCase implements AuthUseCase {
 		}
 		if (!password) {
 			throw new MissingParamError('password');
+		}
+
+		if (!this.loadUserByEmailRepository.load) {
+			throw new InvalidParamError('loadUserByEmailRepository');
 		}
 
 		await this.loadUserByEmailRepository.load(email);
@@ -53,6 +58,14 @@ describe('Auth UseCase', () => {
 		await sut.auth('any_email@mail.com', 'any_password');
 
 		expect(loadUserByEmailRepositorySpy.email).toBe('any_email@mail.com');
+	});
+
+	test('Should throw if no LoadUserByEmailRepository is provided', async () => {
+		const sut = new AuthUseCase({} as ILoadUserByEmailRepository);
+
+		const promise = sut.auth('any_email@mail.com', 'any_password');
+
+		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));
 	});
 
 	test('Should return a token if valid params are provided', async () => {
