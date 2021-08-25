@@ -1,6 +1,7 @@
 import InvalidParamError from '../../helpers/errors/invalidParamError';
 import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
 import MissingParamError from '../../helpers/errors/missingParamError';
+import AuthUseCase from './authUseCase';
 
 class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 	email!: string;
@@ -8,28 +9,6 @@ class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 		this.email = email;
 
 		return null;
-	}
-}
-
-class AuthUseCase implements AuthUseCase {
-	constructor(private loadUserByEmailRepository: ILoadUserByEmailRepository) {}
-	async auth(email: string, password: string) {
-		if (!email) {
-			throw new MissingParamError('email');
-		}
-		if (!password) {
-			throw new MissingParamError('password');
-		}
-
-		if (!this.loadUserByEmailRepository.load) {
-			throw new InvalidParamError('loadUserByEmailRepository');
-		}
-
-		const user = await this.loadUserByEmailRepository.load(email);
-
-		if (!user) {
-			return null;
-		}
 	}
 }
 
