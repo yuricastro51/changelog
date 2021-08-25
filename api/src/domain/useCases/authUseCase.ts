@@ -22,5 +22,7 @@ export default class AuthUseCase implements AuthUseCase {
 		if (!user) {
 			return null;
 		}
+
+		return null;
 	}
 }
