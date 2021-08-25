@@ -48,7 +48,7 @@ describe('Auth UseCase', () => {
 		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));
 	});
 
-	test('Should return null if LoadUserByEmailRepository.load() returns null', async () => {
+	test('Should return null if an invalid email is provided', async () => {
 		const { sut } = makeSut();
 		const accessToken = await sut.auth('invalid_email@mail.com', 'any_password');
 
