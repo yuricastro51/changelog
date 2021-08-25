@@ -1,9 +1,13 @@
+import { IEncrypter } from 'src/interfaces/encrypter';
 import InvalidParamError from '../../helpers/errors/invalidParamError';
 import MissingParamError from '../../helpers/errors/missingParamError';
 import { ILoadUserByEmailRepository } from '../../interfaces/loadUserByEmailRepository';
 
 export default class AuthUseCase implements AuthUseCase {
-	constructor(private loadUserByEmailRepository: ILoadUserByEmailRepository) {}
+	constructor(
+		private loadUserByEmailRepository: ILoadUserByEmailRepository,
+		private encrypter: IEncrypter,
+	) {}
 
 	async auth(email: string, password: string) {
 		if (!email) {
@@ -22,6 +26,8 @@ export default class AuthUseCase implements AuthUseCase {
 		if (!user) {
 			return null;
 		}
+
+		await this.encrypter.compare(password, user.password);
 
 		return null;
 	}

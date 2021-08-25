@@ -11,3 +11,8 @@ export type HttpResponseType = {
 	statusCode: number;
 	body: any;
 };
+
+export type User = {
+	email: string;
+	password: string;
+};

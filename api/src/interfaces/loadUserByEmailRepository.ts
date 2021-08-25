@@ -1,3 +1,5 @@
+import { User } from 'src/utils/types';
+
 export interface ILoadUserByEmailRepository {
-	load(email: string): any;
+	load(email: string): Promise<User>;
 }

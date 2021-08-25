@@ -3,8 +3,9 @@ import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express-serve-static-core';
-import { ReleaseNote } from './entities/ReleaseNote';
+
 import { getMyConnection } from './services/db';
+import { ReleaseNote } from './entities/releaseNote';
 
 dotenv.config();
 
