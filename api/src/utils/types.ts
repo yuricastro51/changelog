@@ -13,6 +13,7 @@ export type HttpResponseType = {
 };
 
 export type User = {
+	id: string;
 	email: string;
 	password: string;
 };
