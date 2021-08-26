@@ -5,37 +5,50 @@ import AuthUseCase from './authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
 import { User } from 'src/utils/types';
 
-class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
-	email!: string;
-	user!: User;
+const makeLoadUserByEmailRepository = () => {
+	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
+		email!: string;
+		user!: User;
 
-	async load(email: string): Promise<User> {
-		this.email = email;
+		async load(email: string): Promise<User> {
+			this.email = email;
 
-		return this.user;
+			return this.user;
+		}
 	}
-}
 
-class EncrypterSpy implements IEncrypter {
-	password!: string;
-	hashedPassword!: string;
-
-	async compare(password: string, hashedPassword: string): Promise<boolean> {
-		this.password = password;
-		this.hashedPassword = hashedPassword;
-
-		return true;
-	}
-}
-
-const makeSut = () => {
 	const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy();
 	loadUserByEmailRepositorySpy.user = {
 		password: 'hashed_password',
-		email: '',
+		email: 'valid_email@mail.com',
 	};
 
+	return loadUserByEmailRepositorySpy;
+};
+
+const makeEncrypter = () => {
+	class EncrypterSpy implements IEncrypter {
+		password!: string;
+		hashedPassword!: string;
+		isValid!: boolean;
+
+		async compare(password: string, hashedPassword: string): Promise<boolean> {
+			this.password = password;
+			this.hashedPassword = hashedPassword;
+
+			return this.isValid;
+		}
+	}
+
 	const encrypterSpy = new EncrypterSpy();
+	encrypterSpy.isValid = true;
+	return encrypterSpy;
+};
+
+const makeSut = () => {
+	const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepository();
+	const encrypterSpy = makeEncrypter();
+
 	const sut = new AuthUseCase(loadUserByEmailRepositorySpy, encrypterSpy);
 
 	return { sut, loadUserByEmailRepositorySpy, encrypterSpy };
@@ -79,7 +92,9 @@ describe('Auth UseCase', () => {
 	});
 
 	test('Should return null if an invalid password is provided', async () => {
-		const { sut } = makeSut();
+		const { sut, encrypterSpy } = makeSut();
+		encrypterSpy.isValid = false;
+
 		const accessToken = await sut.auth('valid_email@mail.com', 'invalid_password');
 
 		expect(accessToken).toBeNull();

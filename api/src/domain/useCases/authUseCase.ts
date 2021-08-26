@@ -23,12 +23,14 @@ export default class AuthUseCase implements AuthUseCase {
 
 		const user = await this.loadUserByEmailRepository.load(email);
 
-		if (!user) {
+		if (!user.email) {
 			return null;
 		}
 
-		await this.encrypter.compare(password, user.password);
+		const isValid = await this.encrypter.compare(password, user.password);
 
-		return null;
+		if (!isValid) {
+			return null;
+		}
 	}
 }
