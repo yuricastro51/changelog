@@ -9,9 +9,9 @@ import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
 const makeLoadUserByEmailRepository = () => {
 	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 		email!: string;
-		user!: User;
+		user!: User | null;
 
-		async load(email: string): Promise<User> {
+		async load(email: string): Promise<User | null> {
 			this.email = email;
 
 			return this.user;
@@ -115,7 +115,7 @@ describe('Auth UseCase', () => {
 
 	test('Should return null if an invalid email is provided', async () => {
 		const { sut, loadUserByEmailRepositorySpy } = makeSut();
-		loadUserByEmailRepositorySpy.user = {} as User;
+		loadUserByEmailRepositorySpy.user = null;
 		const accessToken = await sut.auth('invalid_email@mail.com', 'any_password');
 
 		expect(accessToken).toBeNull();
@@ -135,13 +135,21 @@ describe('Auth UseCase', () => {
 		await sut.auth('valid_email@mail.com', 'any_password');
 
 		expect(encrypterSpy.password).toBe('any_password');
-		expect(encrypterSpy.hashedPassword).toBe(loadUserByEmailRepositorySpy.user.password);
+		expect(encrypterSpy.hashedPassword).toBe(loadUserByEmailRepositorySpy.user?.password);
 	});
 
 	test('Should call TokenGenerator with correct userId', async () => {
 		const { sut, loadUserByEmailRepositorySpy, tokenGeneratorSpy } = makeSut();
 		await sut.auth('valid_email@mail.com', 'valid_password');
 
-		expect(tokenGeneratorSpy.userId).toBe(loadUserByEmailRepositorySpy.user.id);
+		expect(tokenGeneratorSpy.userId).toBe(loadUserByEmailRepositorySpy.user?.id);
+	});
+
+	test('Should return an accessToken if correct credentials are provided', async () => {
+		const { sut, tokenGeneratorSpy } = makeSut();
+		const accessToken = await sut.auth('valid_email@mail.com', 'valid_password');
+
+		expect(tokenGeneratorSpy.accessToken).toBe(accessToken);
+		expect(tokenGeneratorSpy.accessToken).toBeTruthy();
 	});
 });
