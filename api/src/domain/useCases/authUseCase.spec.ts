@@ -124,6 +124,17 @@ describe('Auth UseCase', () => {
 		expect(promise).rejects.toThrow(new InvalidParamError('encrypter'));
 	});
 
+	test('Should throw if invalid TokenGenerator is provided', async () => {
+		const sut = new AuthUseCase({
+			loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+			encrypter: makeEncrypter(),
+			tokenGenerator: {} as ITokenGenerator,
+		});
+		const promise = sut.auth('any_email@mail.com', 'any_password');
+
+		expect(promise).rejects.toThrow(new InvalidParamError('tokenGenerator'));
+	});
+
 	test('Should return null if an invalid email is provided', async () => {
 		const { sut, loadUserByEmailRepositorySpy } = makeSut();
 		loadUserByEmailRepositorySpy.user = null;

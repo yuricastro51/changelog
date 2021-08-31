@@ -49,6 +49,10 @@ export default class AuthUseCase implements IAuthUseCase {
 			return null;
 		}
 
+		if (!this.tokenGenerator.generate) {
+			throw new InvalidParamError('tokenGenerator');
+		}
+
 		const accessToken = await this.tokenGenerator.generate(user.id);
 		return accessToken;
 	}
