@@ -124,6 +124,19 @@ const makeUpdateAccessTokenRepository = () => {
 	return updateAccessTokenRepositorySpy;
 };
 
+const makeUpdateAccessTokenRepositoryWithError = () => {
+	class UpdateAccessTokenRepositorySpy implements IUpdateAccessTokenRepository {
+		userId!: string;
+		accessToken!: string;
+
+		async update(userId: string, accessToken: string): Promise<void> {
+			throw new Error();
+		}
+	}
+
+	return new UpdateAccessTokenRepositorySpy();
+};
+
 const makeSut = () => {
 	const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepository();
 	const encrypterSpy = makeEncrypter();
@@ -197,6 +210,18 @@ describe('Auth UseCase', () => {
 			loadUserByEmailRepository: makeLoadUserByEmailRepository(),
 			encrypter: makeEncrypter(),
 			tokenGenerator: {} as ITokenGenerator,
+			updateAccessTokenRepository: {} as IUpdateAccessTokenRepository,
+		});
+		const promise = sut.auth('any_email@mail.com', 'any_password');
+
+		expect(promise).rejects.toThrow();
+	});
+
+	test('Should throw if invalid UpdateAccessTokenRepository is provided', async () => {
+		const sut = new AuthUseCase({
+			loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+			encrypter: makeEncrypter(),
+			tokenGenerator: makeTokenGenerator(),
 			updateAccessTokenRepository: {} as IUpdateAccessTokenRepository,
 		});
 		const promise = sut.auth('any_email@mail.com', 'any_password');
@@ -280,6 +305,12 @@ describe('Auth UseCase', () => {
 				encrypter: makeEncrypter(),
 				tokenGenerator: makeTokenGeneratorWithError(),
 				updateAccessTokenRepository: makeUpdateAccessTokenRepository(),
+			}),
+			new AuthUseCase({
+				loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+				encrypter: makeEncrypter(),
+				tokenGenerator: makeTokenGenerator(),
+				updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError(),
 			}),
 		];
 
