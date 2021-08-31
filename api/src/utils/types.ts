@@ -1,3 +1,7 @@
+import { IEncrypter } from 'src/interfaces/encrypter';
+import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
+import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
+
 export type LoginType = {
 	email: string;
 	password: string;
@@ -16,4 +20,10 @@ export type User = {
 	id: string;
 	email: string;
 	password: string;
+};
+
+export type AuthUseCaseProps = {
+	loadUserByEmailRepository: ILoadUserByEmailRepository;
+	encrypter: IEncrypter;
+	tokenGenerator: ITokenGenerator;
 };

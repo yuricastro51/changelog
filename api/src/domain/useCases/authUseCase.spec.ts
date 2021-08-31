@@ -3,7 +3,7 @@ import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailReposi
 import MissingParamError from '../../helpers/errors/missingParamError';
 import AuthUseCase from './authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
-import { User } from 'src/utils/types';
+import { AuthUseCaseProps, User } from '../../utils/types';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
 
 const makeLoadUserByEmailRepository = () => {
@@ -111,6 +111,17 @@ describe('Auth UseCase', () => {
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
 		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));
+	});
+
+	test('Should throw if invalid Encrypter is provided', async () => {
+		const sut = new AuthUseCase({
+			loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+			encrypter: {} as IEncrypter,
+			tokenGenerator: {} as ITokenGenerator,
+		});
+		const promise = sut.auth('any_email@mail.com', 'any_password');
+
+		expect(promise).rejects.toThrow(new InvalidParamError('encrypter'));
 	});
 
 	test('Should return null if an invalid email is provided', async () => {
