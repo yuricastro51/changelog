@@ -1,8 +1,8 @@
 import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
+import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
 import { AuthUseCaseProps } from 'src/utils/types';
-import InvalidParamError from '../../helpers/errors/invalidParamError';
 import MissingParamError from '../../helpers/errors/missingParamError';
 import { ILoadUserByEmailRepository } from '../../interfaces/loadUserByEmailRepository';
 
@@ -10,15 +10,18 @@ export default class AuthUseCase implements IAuthUseCase {
 	tokenGenerator: ITokenGenerator;
 	encrypter: IEncrypter;
 	loadUserByEmailRepository: ILoadUserByEmailRepository;
+	updateAccessTokenRepository: IUpdateAccessTokenRepository;
 
 	constructor({
 		loadUserByEmailRepository,
 		encrypter,
 		tokenGenerator,
+		updateAccessTokenRepository,
 	}: AuthUseCaseProps) {
 		this.loadUserByEmailRepository = loadUserByEmailRepository;
 		this.encrypter = encrypter;
 		this.tokenGenerator = tokenGenerator;
+		this.updateAccessTokenRepository = updateAccessTokenRepository;
 	}
 
 	async auth(email: string, password: string): Promise<string | null> {
@@ -42,6 +45,9 @@ export default class AuthUseCase implements IAuthUseCase {
 		}
 
 		const accessToken = await this.tokenGenerator.generate(user.id);
+
+		await this.updateAccessTokenRepository.update(user.id, accessToken);
+
 		return accessToken;
 	}
 }
