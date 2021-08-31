@@ -29,28 +29,16 @@ export default class AuthUseCase implements IAuthUseCase {
 			throw new MissingParamError('password');
 		}
 
-		if (!this.loadUserByEmailRepository.load) {
-			throw new InvalidParamError('loadUserByEmailRepository');
-		}
-
 		const user = await this.loadUserByEmailRepository.load(email);
 
 		if (!user) {
 			return null;
 		}
 
-		if (!this.encrypter.compare) {
-			throw new InvalidParamError('encrypter');
-		}
-
 		const isValid = await this.encrypter.compare(password, user.password);
 
 		if (!isValid) {
 			return null;
-		}
-
-		if (!this.tokenGenerator.generate) {
-			throw new InvalidParamError('tokenGenerator');
 		}
 
 		const accessToken = await this.tokenGenerator.generate(user.id);

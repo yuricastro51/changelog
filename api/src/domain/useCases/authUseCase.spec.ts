@@ -110,7 +110,7 @@ describe('Auth UseCase', () => {
 		});
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
-		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));
+		expect(promise).rejects.toThrow();
 	});
 
 	test('Should throw if invalid Encrypter is provided', async () => {
@@ -121,7 +121,7 @@ describe('Auth UseCase', () => {
 		});
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
-		expect(promise).rejects.toThrow(new InvalidParamError('encrypter'));
+		expect(promise).rejects.toThrow();
 	});
 
 	test('Should throw if invalid TokenGenerator is provided', async () => {
@@ -132,7 +132,7 @@ describe('Auth UseCase', () => {
 		});
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
-		expect(promise).rejects.toThrow(new InvalidParamError('tokenGenerator'));
+		expect(promise).rejects.toThrow();
 	});
 
 	test('Should return null if an invalid email is provided', async () => {
