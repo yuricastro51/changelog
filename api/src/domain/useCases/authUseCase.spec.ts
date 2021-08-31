@@ -5,6 +5,7 @@ import AuthUseCase from './authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
 import { AuthUseCaseProps, User } from '../../utils/types';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
+import { IAuthUseCase } from 'src/interfaces/authUseCase';
 
 const makeLoadUserByEmailRepository = () => {
 	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
@@ -28,6 +29,19 @@ const makeLoadUserByEmailRepository = () => {
 	return loadUserByEmailRepositorySpy;
 };
 
+const makeLoadUserByEmailRepositoryWithError = () => {
+	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
+		email!: string;
+		user!: User | null;
+
+		async load(email: string): Promise<User | null> {
+			throw new Error();
+		}
+	}
+
+	return new LoadUserByEmailRepositorySpy();
+};
+
 const makeEncrypter = () => {
 	class EncrypterSpy implements IEncrypter {
 		password!: string;
@@ -48,6 +62,20 @@ const makeEncrypter = () => {
 	return encrypterSpy;
 };
 
+const makeEncrypterWithError = () => {
+	class EncrypterSpy implements IEncrypter {
+		password!: string;
+		hashedPassword!: string;
+		isValid!: boolean;
+
+		async compare(password: string, hashedPassword: string): Promise<boolean> {
+			throw new Error();
+		}
+	}
+
+	return new EncrypterSpy();
+};
+
 const makeTokenGenerator = () => {
 	class TokenGenerator implements ITokenGenerator {
 		userId!: string;
@@ -64,6 +92,19 @@ const makeTokenGenerator = () => {
 	tokenGeneratorSpy.accessToken = 'any_token';
 
 	return tokenGeneratorSpy;
+};
+
+const makeTokenGeneratorWithError = () => {
+	class TokenGenerator implements ITokenGenerator {
+		userId!: string;
+		accessToken!: string;
+
+		async generate(userId: string): Promise<string> {
+			throw new Error();
+		}
+	}
+
+	return new TokenGenerator();
 };
 
 const makeSut = () => {
@@ -173,5 +214,30 @@ describe('Auth UseCase', () => {
 
 		expect(tokenGeneratorSpy.accessToken).toBe(accessToken);
 		expect(tokenGeneratorSpy.accessToken).toBeTruthy();
+	});
+
+	test('Should throw if dependency throws', async () => {
+		const suts: IAuthUseCase[] = [
+			new AuthUseCase({
+				loadUserByEmailRepository: makeLoadUserByEmailRepositoryWithError(),
+				encrypter: makeEncrypter(),
+				tokenGenerator: makeTokenGenerator(),
+			}),
+			new AuthUseCase({
+				loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+				encrypter: makeEncrypterWithError(),
+				tokenGenerator: makeTokenGenerator(),
+			}),
+			new AuthUseCase({
+				loadUserByEmailRepository: makeLoadUserByEmailRepository(),
+				encrypter: makeEncrypter(),
+				tokenGenerator: makeTokenGeneratorWithError(),
+			}),
+		];
+
+		for (const sut of suts) {
+			const promise = sut.auth('any_email@mail.com', 'any_password');
+			expect(promise).rejects.toThrow();
+		}
 	});
 });
