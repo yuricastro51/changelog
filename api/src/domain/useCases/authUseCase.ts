@@ -1,17 +1,32 @@
+import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
 import InvalidParamError from '../../helpers/errors/invalidParamError';
 import MissingParamError from '../../helpers/errors/missingParamError';
 import { ILoadUserByEmailRepository } from '../../interfaces/loadUserByEmailRepository';
 
-export default class AuthUseCase implements AuthUseCase {
-	constructor(
-		private loadUserByEmailRepository: ILoadUserByEmailRepository,
-		private encrypter: IEncrypter,
-		private tokenGenerator: ITokenGenerator,
-	) {}
+type AuthUseCaseProps = {
+	loadUserByEmailRepository: ILoadUserByEmailRepository;
+	encrypter: IEncrypter;
+	tokenGenerator: ITokenGenerator;
+};
 
-	async auth(email: string, password: string) {
+export default class AuthUseCase implements IAuthUseCase {
+	tokenGenerator: ITokenGenerator;
+	encrypter: IEncrypter;
+	loadUserByEmailRepository: ILoadUserByEmailRepository;
+
+	constructor({
+		loadUserByEmailRepository,
+		encrypter,
+		tokenGenerator,
+	}: AuthUseCaseProps) {
+		this.loadUserByEmailRepository = loadUserByEmailRepository;
+		this.encrypter = encrypter;
+		this.tokenGenerator = tokenGenerator;
+	}
+
+	async auth(email: string, password: string): Promise<string | null> {
 		if (!email) {
 			throw new MissingParamError('email');
 		}

@@ -71,11 +71,11 @@ const makeSut = () => {
 	const encrypterSpy = makeEncrypter();
 	const tokenGeneratorSpy = makeTokenGenerator();
 
-	const sut = new AuthUseCase(
-		loadUserByEmailRepositorySpy,
-		encrypterSpy,
-		tokenGeneratorSpy,
-	);
+	const sut = new AuthUseCase({
+		loadUserByEmailRepository: loadUserByEmailRepositorySpy,
+		encrypter: encrypterSpy,
+		tokenGenerator: tokenGeneratorSpy,
+	});
 
 	return { sut, loadUserByEmailRepositorySpy, encrypterSpy, tokenGeneratorSpy };
 };
@@ -103,11 +103,11 @@ describe('Auth UseCase', () => {
 	});
 
 	test('Should throw if invalid LoadUserByEmailRepository is provided', async () => {
-		const sut = new AuthUseCase(
-			{} as ILoadUserByEmailRepository,
-			{} as IEncrypter,
-			{} as ITokenGenerator,
-		);
+		const sut = new AuthUseCase({
+			loadUserByEmailRepository: {} as ILoadUserByEmailRepository,
+			encrypter: {} as IEncrypter,
+			tokenGenerator: {} as ITokenGenerator,
+		});
 		const promise = sut.auth('any_email@mail.com', 'any_password');
 
 		expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'));

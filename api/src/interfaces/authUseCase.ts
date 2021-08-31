@@ -1,3 +1,3 @@
 export interface IAuthUseCase {
-	auth(email: string, password: string): Promise<string | undefined>;
+	auth(email: string, password: string): Promise<string | null>;
 }
