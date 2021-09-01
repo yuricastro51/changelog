@@ -1,6 +1,11 @@
 class BcryptTest {
 	isValid = true;
+	hash!: string;
+	value!: string;
+
 	async compare(value: string, hash: string): Promise<boolean> {
+		this.value = value;
+		this.hash = hash;
 		return this.isValid;
 	}
 }
@@ -32,5 +37,14 @@ describe('Encrypter', () => {
 		const isValid = await sut.compare('any_value', 'hashed_value');
 
 		expect(isValid).toBe(false);
+	});
+
+	test('Should call Encrypter with correct values', async () => {
+		const { sut } = makeSut();
+		await sut.compare('any_value', 'hashed_value');
+
+		//@ts-ignore
+		expect(bcrypt.value).toBe('any_value');
+		expect(bcrypt.hash).toBe('hashed_value');
 	});
 });
