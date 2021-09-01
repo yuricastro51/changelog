@@ -3,7 +3,7 @@ import { IEncrypter } from 'src/interfaces/encrypter';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
 import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
 import { AuthUseCaseProps } from 'src/utils/types';
-import MissingParamError from '../../helpers/errors/missingParamError';
+import MissingParamError from '../../utils/errors/missingParamError';
 import { ILoadUserByEmailRepository } from '../../interfaces/loadUserByEmailRepository';
 
 export default class AuthUseCase implements IAuthUseCase {

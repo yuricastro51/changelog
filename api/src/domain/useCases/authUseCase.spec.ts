@@ -1,6 +1,5 @@
-import InvalidParamError from '../../helpers/errors/invalidParamError';
 import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
-import MissingParamError from '../../helpers/errors/missingParamError';
+import MissingParamError from '../../utils/errors/missingParamError';
 import AuthUseCase from './authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
 import { User } from '../../utils/types';

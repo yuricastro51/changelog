@@ -1,9 +1,9 @@
 import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType } from 'src/utils/types';
-import HttpResponse from '../helpers/httpResponse';
-import InvalidParamError from '../helpers/errors/invalidParamError';
-import MissingParamError from '../helpers/errors/missingParamError';
+import HttpResponse from '../utils/helpers/httpResponse';
+import InvalidParamError from '../utils/errors/invalidParamError';
+import MissingParamError from '../utils/errors/missingParamError';
 
 export default class LoginRouter {
 	authUseCase: IAuthUseCase;

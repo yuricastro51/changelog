@@ -1,10 +1,10 @@
 import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { EmailValidator } from 'src/interfaces/emailValidator';
 import { HttpRequestType, HttpResponseType } from 'src/utils/types';
-import InvalidParamError from '../helpers/errors/invalidParamError';
-import MissingParamError from '../helpers/errors/missingParamError';
-import ServerError from '../helpers/errors/serverError';
-import UnauthorizedError from '../helpers/errors/unauthorizedError';
+import InvalidParamError from '../utils/errors/invalidParamError';
+import MissingParamError from '../utils/errors/missingParamError';
+import ServerError from '../utils/errors/serverError';
+import UnauthorizedError from '../utils/errors/unauthorizedError';
 import LoginRouter from './loginRouter';
 
 const makeSut = () => {
@@ -20,15 +20,15 @@ const makeSut = () => {
 
 const makeAuthUseCase = () => {
 	class AuthUseCaseSpy implements IAuthUseCase {
-		email?: string;
-		password?: string;
-		accessToken?: string;
+		email!: string;
+		password!: string;
+		accessToken!: string | null;
 
-		auth = async (email: string, password: string) => {
+		async auth(email: string, password: string): Promise<string | null> {
 			this.email = email;
 			this.password = password;
 			return this.accessToken;
-		};
+		}
 	}
 
 	return new AuthUseCaseSpy();
@@ -128,7 +128,7 @@ describe('Login Router', () => {
 
 	test('Should returns 401 when invalid credentials are provided', async () => {
 		const { sut, authUseCaseSpy } = makeSut();
-		authUseCaseSpy.accessToken = undefined;
+		authUseCaseSpy.accessToken = null;
 		const httpRequest = {
 			body: {
 				password: 'invalid_password',
