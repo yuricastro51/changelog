@@ -1,6 +1,6 @@
 class BcryptTest {
 	isValid = true;
-	async compare(password: string, hashedPassword: string): Promise<boolean> {
+	async compare(value: string, hash: string): Promise<boolean> {
 		return this.isValid;
 	}
 }
@@ -20,7 +20,7 @@ const makeSut = () => {
 describe('Encrypter', () => {
 	test('Should return true if bcrypt returns true', async () => {
 		const { sut } = makeSut();
-		const isValid = await sut.compare('any_password', 'hashed_password');
+		const isValid = await sut.compare('any_value', 'hashed_value');
 
 		expect(isValid).toBe(true);
 	});
@@ -29,7 +29,7 @@ describe('Encrypter', () => {
 		const { sut } = makeSut();
 		//@ts-ignore
 		bcrypt.isValid = false;
-		const isValid = await sut.compare('any_password', 'hashed_password');
+		const isValid = await sut.compare('any_value', 'hashed_value');
 
 		expect(isValid).toBe(false);
 	});
