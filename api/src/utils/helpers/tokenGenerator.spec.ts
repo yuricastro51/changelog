@@ -9,6 +9,7 @@ class JwtTest {
 jest.mock('jsonwebtoken', () => new JwtTest());
 
 import jwt from 'jsonwebtoken';
+import MissingParamError from '../errors/missingParamError';
 import { TokenGenerator } from './tokenGenerator';
 
 const makeSut = () => {
@@ -33,5 +34,13 @@ describe('TokenGenerator', () => {
 
 		//@ts-ignore
 		expect(token).toBe(jwt.token);
+	});
+
+	test('Should throw if no param is provided', async () => {
+		const { sut } = makeSut();
+		const token = sut.generate('');
+
+		//@ts-ignore
+		expect(token).rejects.toThrow(new MissingParamError('userId'));
 	});
 });
