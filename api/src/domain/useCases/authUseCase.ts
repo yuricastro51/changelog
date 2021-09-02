@@ -46,6 +46,10 @@ export default class AuthUseCase implements IAuthUseCase {
 
 		const accessToken = await this.tokenGenerator.generate(user.id);
 
+		if (!accessToken) {
+			return null;
+		}
+
 		await this.updateAccessTokenRepository.update(user.id, accessToken);
 
 		return accessToken;
