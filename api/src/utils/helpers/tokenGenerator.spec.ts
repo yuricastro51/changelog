@@ -1,7 +1,9 @@
 class JwtTest {
 	token = 'any_token';
+	id!: string;
 
 	sign(payload: string, secret: string): string | null {
+		this.id = payload;
 		return this.token;
 	}
 }
@@ -42,5 +44,13 @@ describe('TokenGenerator', () => {
 
 		//@ts-ignore
 		expect(token).rejects.toThrow(new MissingParamError('userId'));
+	});
+
+	test('Should call TokenGenerator with correct params', async () => {
+		const { sut } = makeSut();
+		sut.generate('any_id');
+
+		//@ts-ignore
+		expect(jwt.id).toBe('any_id');
 	});
 });
