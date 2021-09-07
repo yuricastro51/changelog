@@ -48,7 +48,7 @@ describe('TokenGenerator', () => {
 		expect(token).rejects.toThrow(new MissingParamError('userId'));
 	});
 
-	test('Should call TokenGenerator with correct params', async () => {
+	test('Should call JWT with correct params', async () => {
 		const { sut } = makeSut();
 		sut.generate('any_id');
 
@@ -56,5 +56,12 @@ describe('TokenGenerator', () => {
 		expect(jwt.id).toBe('any_id');
 		//@ts-ignore
 		expect(jwt.secret).toBe(sut.secret);
+	});
+
+	test('Should throw if no secret is provided', async () => {
+		const sut = new TokenGenerator('');
+		const token = sut.generate('any_id');
+
+		await expect(token).rejects.toThrow(new MissingParamError('secret'));
 	});
 });
