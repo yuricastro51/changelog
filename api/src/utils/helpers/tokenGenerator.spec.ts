@@ -44,8 +44,7 @@ describe('TokenGenerator', () => {
 		const { sut } = makeSut();
 		const token = sut.generate('');
 
-		//@ts-ignore
-		expect(token).rejects.toThrow(new MissingParamError('userId'));
+		await expect(token).rejects.toThrow(new MissingParamError('id'));
 	});
 
 	test('Should call JWT with correct params', async () => {

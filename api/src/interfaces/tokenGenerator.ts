@@ -1,3 +1,3 @@
 export interface ITokenGenerator {
-	generate(userId: string): Promise<string | null>;
+	generate(id: string): Promise<string | null>;
 }
