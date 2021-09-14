@@ -1,3 +1,4 @@
+import InvalidParamError from '../utils/errors/invalidParamError';
 import { Repository } from 'typeorm';
 import { ILoadUserByEmailRepository } from '../interfaces/loadUserByEmailRepository';
 import MissingParamError from '../utils/errors/missingParamError';
@@ -10,6 +11,9 @@ export class LoadUserByEmailRepository implements ILoadUserByEmailRepository {
 			throw new MissingParamError('email');
 		}
 
+		if (!this.repository.find) {
+			throw new InvalidParamError('repository');
+		}
 		const [user] = await this.repository.find({ where: { email: email } });
 
 		if (!user) {

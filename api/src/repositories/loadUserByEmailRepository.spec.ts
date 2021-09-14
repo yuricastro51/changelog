@@ -1,7 +1,9 @@
 import MissingParamError from '../utils/errors/missingParamError';
 import { User } from '../entities/user';
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection, getConnection, Repository } from 'typeorm';
 import { LoadUserByEmailRepository } from './loadUserByEmailRepository';
+import { IUser } from '../utils/types';
+import InvalidParamError from '../utils/errors/invalidParamError';
 
 const getRepository = () => {
 	const connection = getConnection('jest');
@@ -44,6 +46,12 @@ describe('LoadUserByEmailRepository', () => {
 		const { sut } = await makeSut();
 		const user = sut.load('');
 		await expect(user).rejects.toThrow(new MissingParamError('email'));
+	});
+
+	test('Should throw if no repository is provided', async () => {
+		const sut = new LoadUserByEmailRepository({} as Repository<IUser>);
+		const user = sut.load('any_email@mail.com');
+		await expect(user).rejects.toThrow(new InvalidParamError('repository'));
 	});
 
 	test('Should return null if no user is found', async () => {
