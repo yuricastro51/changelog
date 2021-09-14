@@ -24,7 +24,7 @@ describe('LoadUserByEmailRepository', () => {
 			type: 'sqlite',
 			database: ':memory:',
 			dropSchema: true,
-			entities: [User],
+			entities: ['src/entities/**/*.ts'],
 			synchronize: true,
 			logging: false,
 		});

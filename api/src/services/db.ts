@@ -16,7 +16,7 @@ export async function getMyConnection(): Promise<Connection> {
 		username: env.DB_USER,
 		password: env.DB_PASS,
 		database: env.DB_NAME,
-		entities: [User],
+		entities: ['src/entities/**/*.ts'],
 		synchronize: true,
 		name: 'changelog',
 	});
