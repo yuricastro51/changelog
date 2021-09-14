@@ -9,4 +9,6 @@ export class User implements IUser {
 	email!: string;
 	@Column()
 	password!: string;
+	@Column({ nullable: true })
+	accessToken!: string;
 }
