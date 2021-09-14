@@ -17,11 +17,11 @@ export type HttpResponseType = {
 	body: any;
 };
 
-export type User = {
+export interface IUser {
 	id: string;
 	email: string;
 	password: string;
-};
+}
 
 export type AuthUseCaseProps = {
 	loadUserByEmailRepository: ILoadUserByEmailRepository;

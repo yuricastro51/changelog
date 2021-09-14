@@ -2,7 +2,7 @@ import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailReposi
 import MissingParamError from '../../utils/errors/missingParamError';
 import AuthUseCase from './authUseCase';
 import { IEncrypter } from 'src/interfaces/encrypter';
-import { User } from '../../utils/types';
+import { IUser } from '../../utils/types';
 import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
 import { IAuthUseCase } from 'src/interfaces/authUseCase';
 import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
@@ -10,9 +10,9 @@ import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRe
 const makeLoadUserByEmailRepository = () => {
 	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 		email!: string;
-		user!: User | null;
+		user!: IUser | null;
 
-		async load(email: string): Promise<User | null> {
+		async load(email: string): Promise<IUser | null> {
 			this.email = email;
 
 			return this.user;
@@ -32,9 +32,9 @@ const makeLoadUserByEmailRepository = () => {
 const makeLoadUserByEmailRepositoryWithError = () => {
 	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {
 		email!: string;
-		user!: User | null;
+		user!: IUser | null;
 
-		async load(email: string): Promise<User | null> {
+		async load(email: string): Promise<IUser | null> {
 			throw new Error();
 		}
 	}

@@ -1,4 +1,6 @@
+import env from '../utils/helpers/env';
 import { getConnectionManager, Connection } from 'typeorm';
+import { User } from '../entities/user';
 
 export async function getMyConnection(): Promise<Connection> {
 	const connectionManager = getConnectionManager();
@@ -9,12 +11,12 @@ export async function getMyConnection(): Promise<Connection> {
 
 	const connection = connectionManager.create({
 		type: 'mysql',
-		host: process.env.DB_HOST,
+		host: env.DB_HOST,
 		port: 3306,
-		username: process.env.DB_USER,
-		password: process.env.DB_PASS,
-		database: process.env.DB_NAME,
-		entities: ['./src/entity/*.ts'],
+		username: env.DB_USER,
+		password: env.DB_PASS,
+		database: env.DB_NAME,
+		entities: [User],
 		synchronize: true,
 		name: 'changelog',
 	});

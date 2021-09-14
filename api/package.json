@@ -31,6 +31,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"mysql2": "^2.2.5",
 		"reflect-metadata": "^0.1.13",
+		"sqlite3": "^5.0.2",
 		"typeorm": "^0.2.36",
 		"validator": "^13.6.0"
 	},
@@ -48,6 +49,7 @@
 		"@types/jsonwebtoken": "^8.5.1",
 		"@types/mysql": "^2.15.18",
 		"@types/node": "^14.14.31",
+		"@types/sqlite3": "^3.1.7",
 		"@types/validator": "^13.6.3",
 		"@typescript-eslint/eslint-plugin": "^4.15.0",
 		"@typescript-eslint/parser": "^4.15.0",

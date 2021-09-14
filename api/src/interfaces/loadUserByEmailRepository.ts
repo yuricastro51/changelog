@@ -1,5 +1,6 @@
-import { User } from 'src/utils/types';
+import { IUser } from 'src/utils/types';
+import { Repository } from 'typeorm';
 
 export interface ILoadUserByEmailRepository {
-	load(email: string): Promise<User | null>;
+	load(email: string, repository: Repository<IUser>): Promise<IUser | null>;
 }
