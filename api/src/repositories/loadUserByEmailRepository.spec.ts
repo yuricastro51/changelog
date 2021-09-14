@@ -83,10 +83,8 @@ describe('LoadUserByEmailRepository', () => {
 
 		const { id } = insert.identifiers[0];
 
-		await repository.findOne(id);
-
 		const user = await sut.load(validEmail);
 
-		expect(user?.email).toBe(validEmail);
+		expect(user?.id).toEqual(id);
 	});
 });
