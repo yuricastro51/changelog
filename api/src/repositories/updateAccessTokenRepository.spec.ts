@@ -2,10 +2,20 @@ import { User } from '../entities/user';
 import { IUpdateAccessTokenRepository } from '../interfaces/updateAccessTokenRepository';
 import { IUser } from '../utils/types';
 import { createConnection, getConnection, Repository } from 'typeorm';
+import InvalidParamError from '../utils/errors/invalidParamError';
+import MissingParamError from '../utils/errors/missingParamError';
 
 class UpdateAccessTokenRepository implements IUpdateAccessTokenRepository {
 	constructor(private repository: Repository<IUser>) {}
 	async update(userId: string, accessToken: string): Promise<void> {
+		if (!this.repository.find || !this.repository.save) {
+			throw new InvalidParamError('repository');
+		}
+
+		if (!userId) {
+			throw new MissingParamError('userId');
+		}
+
 		const [user] = await this.repository.find({ where: { id: userId } });
 		user.accessToken = accessToken;
 
@@ -65,5 +75,17 @@ describe('UpdateAccessTokenRepository', () => {
 		const [updatedUser] = await repository.find({ where: { id: id } });
 
 		expect(updatedUser.accessToken).toBe('valid_token');
+	});
+
+	test('Should throw if no repository is provided', async () => {
+		const sut = new UpdateAccessTokenRepository({} as Repository<IUser>);
+		const promise = sut.update('any_id', 'any_token');
+		await expect(promise).rejects.toThrow(new InvalidParamError('repository'));
+	});
+
+	test('Should throw if no userId is provided', async () => {
+		const { sut } = makeSut();
+		const promise = sut.update('', 'any_token');
+		await expect(promise).rejects.toThrow(new MissingParamError('userId'));
 	});
 });
