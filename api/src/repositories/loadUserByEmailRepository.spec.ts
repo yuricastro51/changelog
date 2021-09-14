@@ -1,26 +1,7 @@
-import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
 import MissingParamError from '../utils/errors/missingParamError';
-import { IUser } from '../utils/types';
-import { getMyConnection } from '../services/db';
 import { User } from '../entities/user';
-import { createConnection, getConnection, Repository } from 'typeorm';
-
-class LoadUserByEmailRepository implements ILoadUserByEmailRepository {
-	constructor(private repository: Repository<IUser>) {}
-	async load(email: string): Promise<IUser | null> {
-		if (!email) {
-			throw new MissingParamError('email');
-		}
-
-		const [user] = await this.repository.find({ where: { email: email } });
-
-		if (!user) {
-			return null;
-		}
-
-		return user;
-	}
-}
+import { createConnection, getConnection } from 'typeorm';
+import { LoadUserByEmailRepository } from './loadUserByEmailRepository';
 
 const getRepository = () => {
 	const connection = getConnection('jest');
