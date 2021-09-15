@@ -20,6 +20,8 @@ const makeSut = () => {
 };
 
 describe('UpdateAccessTokenRepository', () => {
+	let fakeUserId: string;
+
 	beforeAll(() => {
 		return createConnection({
 			name: 'jest',
@@ -32,9 +34,16 @@ describe('UpdateAccessTokenRepository', () => {
 		});
 	});
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		const repository = getRepository();
 		repository.clear();
+
+		const insert = await repository.insert({
+			email: 'any_email@mail.com',
+			password: 'any_password',
+		});
+
+		fakeUserId = insert.identifiers[0].id;
 	});
 
 	afterAll(() => {
@@ -45,23 +54,16 @@ describe('UpdateAccessTokenRepository', () => {
 	test('Should update the user with the given accessToken', async () => {
 		const { sut, repository } = makeSut();
 
-		const insert = await repository.insert({
-			email: 'any_email@mail.com',
-			password: 'any_password',
-		});
+		await sut.update(fakeUserId, 'valid_token');
 
-		const { id } = insert.identifiers[0];
-
-		await sut.update(id, 'valid_token');
-
-		const [updatedUser] = await repository.find({ where: { id: id } });
+		const [updatedUser] = await repository.find({ where: { id: fakeUserId } });
 
 		expect(updatedUser.accessToken).toBe('valid_token');
 	});
 
 	test('Should throw if no repository is provided', async () => {
 		const sut = new UpdateAccessTokenRepository({} as Repository<IUser>);
-		const promise = sut.update('any_id', 'any_token');
+		const promise = sut.update(fakeUserId, 'any_token');
 		await expect(promise).rejects.toThrow(new InvalidParamError('repository'));
 	});
 
@@ -73,7 +75,7 @@ describe('UpdateAccessTokenRepository', () => {
 
 	test('Should throw if no accessToken is provided', async () => {
 		const { sut } = makeSut();
-		const promise = sut.update('any_id', '');
+		const promise = sut.update(fakeUserId, '');
 		await expect(promise).rejects.toThrow(new MissingParamError('accessToken'));
 	});
 });
