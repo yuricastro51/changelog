@@ -1,17 +1,15 @@
 import 'reflect-metadata';
-import express from 'express';
+
 import cors from 'cors';
-import * as dotenv from 'dotenv';
 import { Request, Response } from 'express-serve-static-core';
 
-import { getMyConnection } from './infra/helpers/typeOrmHelper';
-import { ReleaseNote } from './domain/entities/releaseNote';
+import { getMyConnection } from '../infra/helpers/typeOrmHelper';
+import { ReleaseNote } from '../domain/entities/releaseNote';
 
-dotenv.config();
+import app from './config/app';
 
-const app = express();
 app.use(cors());
-app.use(express.json());
+// app.use(express.json());
 
 app.post('/release', async (req: Request, res: Response) => {
 	const { version, description } = req.body;
