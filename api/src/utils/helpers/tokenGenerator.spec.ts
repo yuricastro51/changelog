@@ -13,7 +13,7 @@ class JwtTest {
 jest.mock('jsonwebtoken', () => new JwtTest());
 
 import jwt from 'jsonwebtoken';
-import MissingParamError from '../errors/missingParamError';
+import MissingParamError from '../../presentation/errors/missingParamError';
 import { TokenGenerator } from './tokenGenerator';
 
 const makeSut = () => {

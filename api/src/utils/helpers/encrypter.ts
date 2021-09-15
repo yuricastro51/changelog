@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { IEncrypter } from 'src/interfaces/encrypter';
-import MissingParamError from '../errors/missingParamError';
+import { IEncrypter } from 'src/domain/interfaces/encrypter';
+import MissingParamError from '../../presentation/errors/missingParamError';
 
 export class Encrypter implements IEncrypter {
 	async compare(value: string, hash: string): Promise<boolean> {

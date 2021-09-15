@@ -1,11 +1,11 @@
-import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
-import MissingParamError from '../../utils/errors/missingParamError';
+import { ILoadUserByEmailRepository } from 'src/domain/interfaces/loadUserByEmailRepository';
+import MissingParamError from '../../presentation/errors/missingParamError';
 import AuthUseCase from './authUseCase';
-import { IEncrypter } from 'src/interfaces/encrypter';
+import { IEncrypter } from 'src/domain/interfaces/encrypter';
 import { IUser } from '../../utils/types';
-import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
-import { IAuthUseCase } from 'src/interfaces/authUseCase';
-import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
+import { ITokenGenerator } from 'src/domain/interfaces/tokenGenerator';
+import { IAuthUseCase } from 'src/domain/interfaces/authUseCase';
+import { IUpdateAccessTokenRepository } from 'src/domain/interfaces/updateAccessTokenRepository';
 
 const makeLoadUserByEmailRepository = () => {
 	class LoadUserByEmailRepositorySpy implements ILoadUserByEmailRepository {

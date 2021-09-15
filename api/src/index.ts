@@ -4,8 +4,8 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express-serve-static-core';
 
-import { getMyConnection } from './services/db';
-import { ReleaseNote } from './entities/releaseNote';
+import { getMyConnection } from './infra/helpers/typeOrmHelper';
+import { ReleaseNote } from './domain/entities/releaseNote';
 
 dotenv.config();
 

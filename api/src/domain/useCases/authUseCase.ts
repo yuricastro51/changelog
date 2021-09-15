@@ -1,10 +1,10 @@
-import { IAuthUseCase } from 'src/interfaces/authUseCase';
-import { IEncrypter } from 'src/interfaces/encrypter';
-import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
-import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
+import { IAuthUseCase } from 'src/domain/interfaces/authUseCase';
+import { IEncrypter } from 'src/domain/interfaces/encrypter';
+import { ITokenGenerator } from 'src/domain/interfaces/tokenGenerator';
+import { IUpdateAccessTokenRepository } from 'src/domain/interfaces/updateAccessTokenRepository';
 import { AuthUseCaseProps, IUser } from 'src/utils/types';
-import MissingParamError from '../../utils/errors/missingParamError';
-import { ILoadUserByEmailRepository } from '../../interfaces/loadUserByEmailRepository';
+import MissingParamError from '../../presentation/errors/missingParamError';
+import { ILoadUserByEmailRepository } from '../interfaces/loadUserByEmailRepository';
 import { Repository } from 'typeorm';
 
 export default class AuthUseCase implements IAuthUseCase {

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
-import MissingParamError from '../errors/missingParamError';
+import { ITokenGenerator } from 'src/domain/interfaces/tokenGenerator';
+import MissingParamError from '../../presentation/errors/missingParamError';
 
 export class TokenGenerator implements ITokenGenerator {
 	constructor(private secret: string) {}

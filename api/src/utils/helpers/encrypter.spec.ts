@@ -13,7 +13,7 @@ class BcryptTest {
 jest.mock('bcrypt', () => new BcryptTest());
 
 import bcrypt from 'bcrypt';
-import MissingParamError from '../errors/missingParamError';
+import MissingParamError from '../../presentation/errors/missingParamError';
 
 import { Encrypter } from './encrypter';
 

@@ -1,7 +1,7 @@
-import { IEncrypter } from 'src/interfaces/encrypter';
-import { ILoadUserByEmailRepository } from 'src/interfaces/loadUserByEmailRepository';
-import { ITokenGenerator } from 'src/interfaces/tokenGenerator';
-import { IUpdateAccessTokenRepository } from 'src/interfaces/updateAccessTokenRepository';
+import { IEncrypter } from 'src/domain/interfaces/encrypter';
+import { ILoadUserByEmailRepository } from 'src/domain/interfaces/loadUserByEmailRepository';
+import { ITokenGenerator } from 'src/domain/interfaces/tokenGenerator';
+import { IUpdateAccessTokenRepository } from 'src/domain/interfaces/updateAccessTokenRepository';
 
 export type LoginType = {
 	email: string;
