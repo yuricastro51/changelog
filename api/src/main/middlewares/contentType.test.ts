@@ -9,4 +9,13 @@ describe('Content-type middleware', () => {
 
 		await supertest(app).get('/test_content_type').expect('content-type', /json/);
 	});
+
+	test('Should return XML content-type if forced', async () => {
+		app.get('/test_content_type_xml', (req, res) => {
+			res.type('xml');
+			res.send('');
+		});
+
+		await supertest(app).get('/test_content_type_xml').expect('content-type', /xml/);
+	});
 });
