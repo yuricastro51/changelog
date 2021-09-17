@@ -8,9 +8,6 @@ import { ReleaseNote } from '../domain/entities/releaseNote';
 
 import app from './config/app';
 
-app.use(cors());
-// app.use(express.json());
-
 app.post('/release', async (req: Request, res: Response) => {
 	const { version, description } = req.body;
 
