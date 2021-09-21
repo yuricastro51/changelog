@@ -12,7 +12,7 @@ import LoginRouter from '../../presentation/routers/loginRouter';
 const connection = getConnection();
 const userRepository = connection.getRepository(User);
 const updateAccessTokenRepository = new UpdateAccessTokenRepository(userRepository);
-const tokenGenerator = new TokenGenerator(env.SECRET);
+const tokenGenerator = new TokenGenerator(env.TOKEN_SECRET);
 const encrypter = new Encrypter();
 const loadUserByEmailRepository = new LoadUserByEmailRepository(userRepository);
 const authUseCase = new AuthUseCase({
