@@ -1,11 +1,12 @@
 import { IAuthUseCase } from 'src/domain/interfaces/authUseCase';
 import { EmailValidator } from 'src/domain/interfaces/emailValidator';
-import { HttpRequestType } from 'src/utils/types';
+import { HttpRequestType, HttpResponseType } from 'src/utils/types';
 import HttpResponse from '../helpers/httpResponse';
 import InvalidParamError from '../errors/invalidParamError';
 import MissingParamError from '../errors/missingParamError';
+import { IRouter } from '../../domain/interfaces/router';
 
-export default class LoginRouter {
+export default class LoginRouter implements IRouter {
 	authUseCase: IAuthUseCase;
 	emailValidator: EmailValidator;
 
@@ -13,7 +14,7 @@ export default class LoginRouter {
 		this.authUseCase = authUseCase;
 		this.emailValidator = emailValidator;
 	}
-	async route(httpRequest: HttpRequestType) {
+	async route(httpRequest: HttpRequestType): Promise<HttpResponseType> {
 		try {
 			const { email, password } = httpRequest.body;
 
