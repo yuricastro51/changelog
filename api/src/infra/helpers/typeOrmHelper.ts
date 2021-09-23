@@ -11,7 +11,7 @@ export async function getMyConnection(): Promise<Connection> {
 	const connection = connectionManager.create({
 		type: 'mysql',
 		host: env.DB_HOST,
-		port: 3306,
+		port: parseInt(env.DB_PORT),
 		username: env.DB_USER,
 		password: env.DB_PASS,
 		database: env.DB_NAME,
