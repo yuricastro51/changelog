@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import adapt from '../adapters/expressRouterAdapter';
-import loginRouterComposer from '../composers/loginRouterComposer';
+import { compose } from '../composers/loginRouterComposer';
 
-export default (router: Router) => {
-	router.post('/login', adapt(loginRouterComposer));
-};
+export default async function setupRoutes(router: Router) {
+	router.post('/login', adapt(await compose()));
+}

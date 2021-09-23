@@ -1,8 +1,9 @@
 import supertest from 'supertest';
-import app from './app';
+import init from './app';
 
 describe('App Setup', () => {
 	test('Should disable x-powered-by header', async () => {
+		const app = await init();
 		app.get('/test_powered_by', (req, res) => {
 			res.send('');
 		});

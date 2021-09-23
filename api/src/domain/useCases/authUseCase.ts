@@ -5,7 +5,6 @@ import { IUpdateAccessTokenRepository } from 'src/domain/interfaces/updateAccess
 import { AuthUseCaseProps, IUser } from 'src/utils/types';
 import MissingParamError from '../../presentation/errors/missingParamError';
 import { ILoadUserByEmailRepository } from '../interfaces/loadUserByEmailRepository';
-import { Repository } from 'typeorm';
 
 export default class AuthUseCase implements IAuthUseCase {
 	tokenGenerator: ITokenGenerator;
@@ -33,10 +32,7 @@ export default class AuthUseCase implements IAuthUseCase {
 			throw new MissingParamError('password');
 		}
 
-		const user = await this.loadUserByEmailRepository.load(
-			email,
-			{} as Repository<IUser>,
-		);
+		const user = await this.loadUserByEmailRepository.load(email);
 
 		if (!user) {
 			return null;

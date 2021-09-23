@@ -6,8 +6,16 @@ import { Request, Response } from 'express-serve-static-core';
 import { getMyConnection } from '../infra/helpers/typeOrmHelper';
 import { ReleaseNote } from '../domain/entities/releaseNote';
 
-import app from './config/app';
+import init from './config/app';
 
+getMyConnection().then(async () => {
+	const app = await init();
+	app.listen(process.env.PORT);
+
+	console.log('Listen on ' + process.env.PORT);
+});
+
+/*
 app.post('/release', async (req: Request, res: Response) => {
 	const { version, description } = req.body;
 
@@ -26,7 +34,8 @@ app.post('/release', async (req: Request, res: Response) => {
 
 	res.send({ uuid: uuid });
 });
-
+*/
+/*
 app.get('/release', async (req: Request, res: Response) => {
 	const connection = await getMyConnection();
 
@@ -52,7 +61,4 @@ app.get('/release/:uuid', async (req: Request, res: Response) => {
 
 	res.send(release);
 });
-
-app.listen(process.env.PORT);
-
-console.log('Listen on ' + process.env.PORT);
+*/

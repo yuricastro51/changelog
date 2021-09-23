@@ -1,8 +1,9 @@
 import supertest from 'supertest';
-import app from '../config/app';
+import init from '../config/app';
 
 describe('JSON Parser middleware', () => {
 	test('Should parse body as JSON', async () => {
+		const app = await init();
 		app.get('/test_json_parser', (req, res) => {
 			res.send(req.body);
 		});

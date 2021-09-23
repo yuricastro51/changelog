@@ -1,8 +1,14 @@
 import express from 'express';
+import setupRoutes from '../routes/loginRoutes';
 import { setupApp } from './setup';
 
 const app = express();
 
-setupApp(app);
+async function init() {
+	setupApp(app);
+	await setupRoutes(app);
 
-export default app;
+	return app;
+}
+
+export default init;
