@@ -29,6 +29,11 @@ describe('Login Routes', () => {
 		connection.close();
 	});
 
+	beforeEach(() => {
+		const repository = getRepository();
+		repository.clear();
+	});
+
 	test('Should return 200 when valid credentials are provided', async () => {
 		const repository = getRepository();
 
@@ -43,5 +48,14 @@ describe('Login Routes', () => {
 			.post('/login')
 			.send({ email: 'valid_email@mail.com', password: 'valid_password' })
 			.expect(200);
+	});
+
+	test('Should return 401 when invalid credentials are provided', async () => {
+		const app = await init();
+
+		await supertest(app)
+			.post('/login')
+			.send({ email: 'valid_email@mail.com', password: 'valid_password' })
+			.expect(401);
 	});
 });
