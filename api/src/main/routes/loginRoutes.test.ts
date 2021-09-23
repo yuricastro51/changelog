@@ -1,7 +1,8 @@
-import { User } from '../../domain/entities/user';
 import supertest from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
+import bcrypt from 'bcrypt';
 import init from '../config/app';
+import { User } from '../../domain/entities/user';
 
 const getRepository = () => {
 	const connection = getConnection('changelog');
@@ -33,7 +34,7 @@ describe('Login Routes', () => {
 
 		await repository.insert({
 			email: 'valid_email@mail.com',
-			password: '$2b$04$hzl.4IfdsFXYyfMjPdORFOkwNyS0w9T/zF8BAy8LLgsCSVr0y6t.u',
+			password: bcrypt.hashSync('valid_password', 10),
 		});
 
 		const app = await init();
